@@ -1,26 +1,13 @@
-version: "3.5"
+PostgreSQL:
+  restart: always
+  image: sameersbn/postgresql:10-2
+  ports:
+    - "5432:5432"
+  environment:
+    - DEBUG=false
 
-services:
-  db:
-    image: mysql:5.7
-    restart: always
-    volumes:
-      - ./src/main/resources/dumpDb.sql:/docker-entrypoint-initdb.d/dump.sql
-    environment:
-      - MYSQL_VERSION=5.7
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=xyInc
-      - MYSQL_USER=guilherme
-      - MYSQL_PASSWORD=secret
-      - MYSQL_HOST=127.0.0.1
-      - MYSQL_PORT=3306
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true
-      - MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d
-    expose:
-      - 3306
-  xy-inc:
-    build: .
-    ports:
-      - 8082:80
-    links:
-      - db
+    - DB_USER=guiborges
+    - DB_PASS=root
+    - DB_NAME=xyInc
+  volumes:
+    - /srv/docker/postgresql:/var/lib/postgresql
