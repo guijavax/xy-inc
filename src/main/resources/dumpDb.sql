@@ -1,6 +1,6 @@
 --
 -- PostgreSQL database dump
--- 
+--
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -11,14 +11,14 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
@@ -29,7 +29,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: coordenates; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: coordenates; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
 --
 
 CREATE TABLE public.coordenates (
@@ -43,7 +43,7 @@ CREATE TABLE public.coordenates (
 ALTER TABLE public.coordenates OWNER TO postgres;
 
 --
--- Name: schema_version; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: schema_version; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
 --
 
 CREATE TABLE public.schema_version (
@@ -109,7 +109,7 @@ SELECT pg_catalog.setval('public.sequence_id_coordenate', 15, true);
 
 
 --
--- Name: coordenates_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: coordenates_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace:
 --
 
 ALTER TABLE ONLY public.coordenates
@@ -117,7 +117,7 @@ ALTER TABLE ONLY public.coordenates
 
 
 --
--- Name: schema_version_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: schema_version_pk; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace:
 --
 
 ALTER TABLE ONLY public.schema_version
@@ -125,21 +125,21 @@ ALTER TABLE ONLY public.schema_version
 
 
 --
--- Name: schema_version_ir_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: schema_version_ir_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace:
 --
 
 CREATE INDEX schema_version_ir_idx ON public.schema_version USING btree (installed_rank);
 
 
 --
--- Name: schema_version_s_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: schema_version_s_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace:
 --
 
 CREATE INDEX schema_version_s_idx ON public.schema_version USING btree (success);
 
 
 --
--- Name: schema_version_vr_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+-- Name: schema_version_vr_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace:
 --
 
 CREATE INDEX schema_version_vr_idx ON public.schema_version USING btree (version_rank);

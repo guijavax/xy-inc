@@ -5,9 +5,9 @@ PostgreSQL:
     - "5432:5432"
   environment:
     - DEBUG=false
-
     - DB_USER=guiborges
     - DB_PASS=root
     - DB_NAME=xyInc
   volumes:
     - /srv/docker/postgresql:/var/lib/postgresql
+    - ./src/main/resources/dumpDb.sql:/docker-entrypoint-initdb.d/dump.sql
