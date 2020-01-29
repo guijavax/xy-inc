@@ -40,7 +40,7 @@ CREATE TABLE public.coordenates (
 );
 
 
-ALTER TABLE public.coordenates OWNER TO postgres;
+ALTER TABLE public.coordenates OWNER TO guiborges;
 
 --
 -- Name: schema_version; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
@@ -61,21 +61,13 @@ CREATE TABLE public.schema_version (
 );
 
 
-ALTER TABLE public.schema_version OWNER TO postgres;
+ALTER TABLE public.schema_version OWNER TO guiborges;
 
 --
 -- Name: sequence_id_coordenate; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE public.sequence_id_coordenate
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
 
-
-ALTER TABLE public.sequence_id_coordenate OWNER TO postgres;
 
 --
 -- Data for Name: coordenates; Type: TABLE DATA; Schema: public; Owner: postgres
