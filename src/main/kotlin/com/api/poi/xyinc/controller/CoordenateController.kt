@@ -24,23 +24,12 @@ import javax.servlet.http.HttpServletResponse
     lateinit  var coordenateRepositorie : CoordenateRepositorie
     val LOGGER = logger()
 
-
-    @ApiOperation(
-            value="Buscar todos os pois",
-            response=CoordenatesEntitie::class)
-    @ApiResponses(value= *arrayOf(
-        ApiResponse(
-                code=200,
-                message="Retorna Lista de todos os pois",
-                response=ResponseEntity::class
-                ),
-                ApiResponse(
-                        code=500,
-                        message="Caso tenhamos algum erro vamos retornar a Exception",
-                        response= ResponseEntityExceptionHandler::class
-                        )
-
-                ))
+    @ApiOperation(value="Buscar todos os pois", response=CoordenatesEntitie::class)
+        @ApiResponses(value= [
+                ApiResponse(code=200, message="Retorna Lista de todos os pois", response=ResponseEntity::class),
+                ApiResponse(code=500, message="Caso tenhamos algum erro vamos retornar a Exception", response= ResponseEntityExceptionHandler::class)
+                ]
+    )
     @GetMapping(path = ["/findAll"])
     fun findAll() : ResponseEntity<List<CoordenatesEntitie>>? {
         var coordenates : List<CoordenatesEntitie>?
@@ -53,81 +42,54 @@ import javax.servlet.http.HttpServletResponse
         return ResponseEntity.noContent().build()
     }
 
-
-    @ApiOperation(
-            value="Buscar poi por proximidade",
-            response=CoordenatesEntitie::class)
-            @ApiResponses(value= *arrayOf(
-                ApiResponse(
-                        code=200,
-                        message="Retorna todos os pois de acordo com uma coordenada e uma distância maxima",
-                        response=ResponseEntity::class
-                        ),
-                        ApiResponse(
-                                code=500,
-                                message="Caso tenhamos algum erro vamos retornar a Exception",
-                                response=ResponseEntityExceptionHandler::class
-                                )
-
-            ))
-
-
-            @GetMapping(path=["/findPoiByProximity/{dmx}"])
-    fun findPoiByProximity(@RequestBody coordenatesPoi : Map<String, Long>, @PathVariable("dmx") dmx : Long) :ResponseEntity<List<String>>?{
-        var coordenates : List<String> = listOf()
+    @ApiOperation(value="Buscar poi por proximidade", response=CoordenatesEntitie::class)
+            @ApiResponses(value= [
+                ApiResponse(code=200, message="Retorna todos os pois de acordo com uma coordenada e uma distância maxima", response=ResponseEntity::class),
+                ApiResponse(code=500, message="Caso tenhamos algum erro vamos retornar a Exception", response=ResponseEntityExceptionHandler::class)
+                ]
+    )
+    @GetMapping(path = ["/findPoiByProximity/{dmx}"])
+    fun findPoiByProximity(@RequestBody coordenatesPoi: Map<String, Long>, @PathVariable("dmx") dmx: Long): ResponseEntity<List<String>>? {
         try {
-            coordenates  = coordenateRepositorie.searchPoiByProximity(coordenatesPoi.get("coordenateX").toString().toLong(), coordenatesPoi.get("coordenateY").toString().toLong(), dmx)
-            if (!coordenates.isEmpty()) return ResponseEntity.ok(coordenates)
-        } catch (e : Exception) {
+            val coord = coordenateRepositorie.searchPoiByProximity(coordenatesPoi["coordenateX"].toString().toLong(), coordenatesPoi["coordenateY"].toString().toLong(), dmx)
+            if (coord.isNotEmpty()) {
+                return ResponseEntity.ok(coord)
+            }
+        } catch (e: Exception) {
             LOGGER.error(e.message!!)
         }
         return ResponseEntity.noContent().build()
     }
 
-
-
-    @ApiOperation(
-            value="Cadastrar um poi",
-            response=CoordenatesEntitie::class)
-            @ApiResponses(value= *arrayOf(
-                ApiResponse(
-                        code=200,
-                        message="Retorna o poi cadastrado",
-                        response=ResponseEntity::class
-                        ),
-                        ApiResponse(
-                                code=500,
-                                message="Caso tenhamos algum erro vamos retornar a Exception",
-                                response=ResponseEntityExceptionHandler::class
-                                )
-
-            ))
-
+    @ApiOperation(value="Cadastrar um poi", response=CoordenatesEntitie::class)
+            @ApiResponses(value= [
+                ApiResponse(code=200, message="Retorna o poi cadastrado", response=ResponseEntity::class),
+                ApiResponse(code=500, message="Caso tenhamos algum erro vamos retornar a Exception", response=ResponseEntityExceptionHandler::class)
+                ]
+    )
 
     @PostMapping(path = ["/insert"])
-    fun insertPoi(@RequestBody coordenatesPoi: CoordenatesEntitie, response : HttpServletResponse) : ResponseEntity<CoordenatesEntitie>? {
+    fun insertPoi(@RequestBody coordenatesPoi: CoordenatesEntitie, response: HttpServletResponse): ResponseEntity<CoordenatesEntitie>? {
         try {
-            var newCoordernate : CoordenatesEntitie = coordenateRepositorie.save(coordenatesPoi)
-            if (newCoordernate != null) {
-                var uri : URI = ServletUriComponentsBuilder.fromCurrentRequestUri()
+            return coordenateRepositorie.save(coordenatesPoi).let {
+                val uri: URI = ServletUriComponentsBuilder.fromCurrentRequestUri()
                         .path("/findById/{id}")
-                        .buildAndExpand(newCoordernate.idCoordenate)
+                        .buildAndExpand(it.idCoordenate)
                         .toUri()
                 response.setHeader("Location", uri.toASCIIString())
-                return ResponseEntity.created(uri).body(newCoordernate)
+                ResponseEntity.created(uri).body(it)
             }
-        } catch (e : Exception) {
+        } catch (e: Exception) {
             LOGGER.error(e.message!!)
         }
         return null
     }
 
-
     @GetMapping(path=["/findById/{id}"])
     fun findById(@PathVariable("id") id : Long) : ResponseEntity<CoordenatesEntitie>? {
             var coordenatesEntitie : CoordenatesEntitie? = null
         try {
-           var coordenates : Optional<CoordenatesEntitie> = coordenateRepositorie.findById(id)
+           val coordenates : Optional<CoordenatesEntitie> = coordenateRepositorie.findById(id)
             coordenatesEntitie = coordenates.get()
         } catch (e : Exception) {
             LOGGER.error(e.message!!)
@@ -135,6 +97,4 @@ import javax.servlet.http.HttpServletResponse
             return if(coordenatesEntitie != null) ResponseEntity.ok(coordenatesEntitie) else ResponseEntity.noContent().build()
         }
     }
-
-
 }

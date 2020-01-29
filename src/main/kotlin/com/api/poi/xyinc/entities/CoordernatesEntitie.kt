@@ -25,5 +25,4 @@ data class CoordenatesEntitie(
         @Column(name="coordenate_y")
         @Min(value=0, message="Coordenada deve ser positiva!")
         val coordenateY : Long? = 0
-
-){}
+)

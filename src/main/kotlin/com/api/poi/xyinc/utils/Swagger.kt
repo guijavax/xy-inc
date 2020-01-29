@@ -16,7 +16,7 @@ class Swagger {
 
     @Bean
     fun apiDetail() : Docket {
-       var  docket : Docket = Docket(DocumentationType.SWAGGER_2)
+       val  docket  = Docket(DocumentationType.SWAGGER_2)
         docket.select().apis(RequestHandlerSelectors.basePackage("com.api.poi.xyinc")).paths(PathSelectors.any())
                 .build().apiInfo(apiInfo().build())
         return docket
@@ -24,19 +24,18 @@ class Swagger {
 
     fun  apiInfo() : ApiInfoBuilder {
 
-         var piInfoBuilder : ApiInfoBuilder = ApiInfoBuilder()
+        val piInfoBuilder = ApiInfoBuilder()
 
-        piInfoBuilder.title("Api-Coordenates");
-        piInfoBuilder.description("Api que gerencia coordenadas.");
-        piInfoBuilder.version("1.0");
-        piInfoBuilder.termsOfServiceUrl("Termo de uso: Teste Desmostrativo");
-        piInfoBuilder.contact(contact());
+        piInfoBuilder.title("Api-Coordenates")
+        piInfoBuilder.description("Api que gerencia coordenadas.")
+        piInfoBuilder.version("1.0")
+        piInfoBuilder.termsOfServiceUrl("Termo de uso: Teste Desmostrativo")
+        piInfoBuilder.contact(contact())
 
-        return piInfoBuilder;
+        return piInfoBuilder
     }
 
     fun contact() : Contact {
-        var cont : Contact = Contact("Guilherme Alves", "N/ha", "guilhermeborgeti@gmail.com")
-        return cont
+        return  Contact("Guilherme Alves", "N/ha", "guilhermeborgeti@gmail.com")
     }
 }
