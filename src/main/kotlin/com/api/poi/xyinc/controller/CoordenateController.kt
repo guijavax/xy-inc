@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
@@ -22,7 +23,7 @@ import javax.servlet.http.HttpServletResponse
 
     @Autowired
     lateinit  var coordenateRepositorie : CoordenateRepositorie
-    val LOGGER = logger()
+    private val LOGGER = logger()
 
     @ApiOperation(value="Buscar todos os pois", response=CoordenatesEntitie::class)
         @ApiResponses(value= [
@@ -31,10 +32,9 @@ import javax.servlet.http.HttpServletResponse
                 ]
     )
     @GetMapping(path = ["/findAll"])
-    fun findAll() : ResponseEntity<List<CoordenatesEntitie>>? {
-        var coordenates : List<CoordenatesEntitie>?
+    fun findAll() : ResponseEntity<MutableList<MutableList<CoordenatesEntitie>>> {
         try {
-            coordenates  = coordenateRepositorie.findAll()
+          val coordenates  = mutableListOf(coordenateRepositorie.findAll())
             if (!coordenates.isEmpty()) return ResponseEntity.ok(coordenates)
         } catch (e : Exception) {
             LOGGER.error(e.message!!)
@@ -50,15 +50,16 @@ import javax.servlet.http.HttpServletResponse
     )
     @GetMapping(path = ["/findPoiByProximity/{dmx}"])
     fun findPoiByProximity(@RequestBody coordenatesPoi: Map<String, Long>, @PathVariable("dmx") dmx: Long): ResponseEntity<List<String>>? {
-        try {
+        return try {
             val coord = coordenateRepositorie.searchPoiByProximity(coordenatesPoi["coordenateX"].toString().toLong(), coordenatesPoi["coordenateY"].toString().toLong(), dmx)
             if (coord.isNotEmpty()) {
-                return ResponseEntity.ok(coord)
+                ResponseEntity.ok(coord)
             }
+            ResponseEntity.noContent().build()
         } catch (e: Exception) {
-            LOGGER.error(e.message!!)
+            LOGGER.error(e?.let{it.message}.toString())
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
         }
-        return ResponseEntity.noContent().build()
     }
 
     @ApiOperation(value="Cadastrar um poi", response=CoordenatesEntitie::class)
@@ -92,7 +93,7 @@ import javax.servlet.http.HttpServletResponse
            val coordenates : Optional<CoordenatesEntitie> = coordenateRepositorie.findById(id)
             coordenatesEntitie = coordenates.get()
         } catch (e : Exception) {
-            LOGGER.error(e.message!!)
+            e?.apply { LOGGER.error(message?:"Erro") }
         } finally {
             return if(coordenatesEntitie != null) ResponseEntity.ok(coordenatesEntitie) else ResponseEntity.noContent().build()
         }

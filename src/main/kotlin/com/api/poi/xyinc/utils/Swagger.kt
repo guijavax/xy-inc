@@ -15,27 +15,21 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2
 class Swagger {
 
     @Bean
-    fun apiDetail() : Docket {
-       val  docket  = Docket(DocumentationType.SWAGGER_2)
-        docket.select().apis(RequestHandlerSelectors.basePackage("com.api.poi.xyinc")).paths(PathSelectors.any())
-                .build().apiInfo(apiInfo().build())
-        return docket
-    }
+    fun apiDetail() =
+       Docket(DocumentationType.SWAGGER_2).apply {
+           select().apis(RequestHandlerSelectors.basePackage("com.api.poi.xyinc")).paths(PathSelectors.any())
+                   .build().apiInfo(apiInfo().build())
+       }
 
     fun  apiInfo() : ApiInfoBuilder {
-
-        val piInfoBuilder = ApiInfoBuilder()
-
-        piInfoBuilder.title("Api-Coordenates")
-        piInfoBuilder.description("Api que gerencia coordenadas.")
-        piInfoBuilder.version("1.0")
-        piInfoBuilder.termsOfServiceUrl("Termo de uso: Teste Desmostrativo")
-        piInfoBuilder.contact(contact())
-
-        return piInfoBuilder
+       return ApiInfoBuilder().apply {
+           title("Api-Coordenates")
+           description("Api que gerencia coordenadas.")
+           version("1.0")
+           termsOfServiceUrl("Termo de uso: Teste Desmostrativo")
+           contact(contact())
+       }
     }
 
-    fun contact() : Contact {
-        return  Contact("Guilherme Alves", "N/ha", "guilhermeborgeti@gmail.com")
-    }
+    fun contact() = Contact("Guilherme Alves", "N/ha", "guilhermeborgeti@gmail.com")
 }
