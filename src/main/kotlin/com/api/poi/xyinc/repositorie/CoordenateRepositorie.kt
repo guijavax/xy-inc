@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 interface CoordenateRepositorie : JpaRepository<CoordenatesEntitie, Long> {
 
     @Query(value="select name_coordenates from coordenates " +
-                    "where :dmax >= sqrt(((:coordenate_x - coordenate_x)^2) + ((:coordenate_y - coordenate_y)^2))"
+                    "where :dmax >= sqrt((POWER(:coordenate_x - coordenate_x, 2)) + (POWER(:coordenate_y - coordenate_y, 2)))"
     ,nativeQuery = true)
     fun searchPoiByProximity (@Param(value="coordenate_x")  coordernateX : Long,
                               @Param(value="coordenate_y")  coordernateY : Long,

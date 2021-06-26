@@ -1,5 +1,6 @@
 package com.api.poi.xyinc.entities
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import javax.persistence.*
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotNull
@@ -9,20 +10,22 @@ import javax.validation.constraints.NotNull
 data class CoordenatesEntitie(
 
         @Id
-        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_coordenate_sequence")
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "id_coordenate", unique = true)
-        @SequenceGenerator(name = "id_coordenate_sequence", sequenceName = "sequence_id_coordenate", initialValue = 1, allocationSize = 1)
         @NotNull
         val idCoordenate : Long? = null,
 
         @Column(name = "name_coordenates")
+        @JsonProperty("name_coordenate")
         val nameCoordenate : String? = "",
 
         @Column(name="coordenate_x")
         @Min(value=0, message="Coordenada deve ser positiva!")
+        @JsonProperty("coordenate_x")
         val coordenateX : Long? = 0,
 
         @Column(name="coordenate_y")
         @Min(value=0, message="Coordenada deve ser positiva!")
+        @JsonProperty("coordenate_y")
         val coordenateY : Long? = 0
 )

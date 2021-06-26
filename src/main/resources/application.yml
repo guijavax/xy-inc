@@ -1,11 +1,13 @@
 spring:
-  data:
-    database: POSTGRES
-
 #DATABASE
   datasource:
-    url: jdbc:postgresql://localhost:5433/xyInc?createDataBaseIfNotExist=true&useSSL=false
+    url: jdbc:h2:mem:xy-inc
+    driverClassName: org.h2.Driver
     username: guiborges
     password: root
-
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
 jpa-show-sql: true

@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse
 
     @Autowired
     lateinit  var coordenateRepositorie : CoordenateRepositorie
+
     private val LOGGER = logger()
 
     @ApiOperation(value="Buscar todos os pois", response=CoordenatesEntitie::class)
@@ -49,16 +50,19 @@ import javax.servlet.http.HttpServletResponse
                 ]
     )
     @GetMapping(path = ["/findPoiByProximity/{dmx}"])
-    fun findPoiByProximity(@RequestBody coordenatesPoi: Map<String, Long>, @PathVariable("dmx") dmx: Long): ResponseEntity<List<String>>? {
-        return try {
-            val coord = coordenateRepositorie.searchPoiByProximity(coordenatesPoi["coordenateX"].toString().toLong(), coordenatesPoi["coordenateY"].toString().toLong(), dmx)
-            if (coord.isNotEmpty()) {
+    fun findPoiByProximity(@RequestParam(name="coordenateX") coordenateX : Long,
+                           @RequestParam(name="coordenateY") coordenateY : Long,
+                           @PathVariable("dmx") dmx: Long): ResponseEntity<List<String>>? {
+         try {
+            val coord = coordenateRepositorie.searchPoiByProximity(coordenateX, coordenateY, dmx)
+            return if (coord.isNotEmpty()) {
                 ResponseEntity.ok(coord)
+            } else {
+                ResponseEntity.noContent().build()
             }
-            ResponseEntity.noContent().build()
         } catch (e: Exception) {
-            LOGGER.error(e?.let{it.message}.toString())
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+            LOGGER.error(e.message.toString())
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
         }
     }
 
@@ -88,12 +92,12 @@ import javax.servlet.http.HttpServletResponse
 
     @GetMapping(path=["/findById/{id}"])
     fun findById(@PathVariable("id") id : Long) : ResponseEntity<CoordenatesEntitie>? {
-            var coordenatesEntitie : CoordenatesEntitie? = null
+        var coordenatesEntitie : CoordenatesEntitie? = null
         try {
            val coordenates : Optional<CoordenatesEntitie> = coordenateRepositorie.findById(id)
             coordenatesEntitie = coordenates.get()
         } catch (e : Exception) {
-            e?.apply { LOGGER.error(message?:"Erro") }
+            e.apply { LOGGER.error(message?:"Erro") }
         } finally {
             return if(coordenatesEntitie != null) ResponseEntity.ok(coordenatesEntitie) else ResponseEntity.noContent().build()
         }
